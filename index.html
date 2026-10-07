@@ -92,6 +92,16 @@ table.t{border-collapse:collapse;table-layout:fixed;width:100%;margin:0;font-siz
 .attachbox{grid-column:1/-1;margin-top:18px;border:1px dashed #b8893a;border-radius:14px;padding:16px;background:linear-gradient(135deg,#fffdf7,#f8fafc)}.attachbox b{display:block;font-size:13px;margin-bottom:4px}.attachbox small{display:block;color:var(--mut);font-size:11px;margin-bottom:10px}.attachbtn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:linear-gradient(180deg,#2a6199,#1f4e79);color:#fff;font-weight:700;font-size:12px;cursor:pointer;box-shadow:0 6px 16px -9px #1f4e79}.attachbtn input{display:none}.attachlist{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.attachtag{padding:6px 9px;border-radius:8px;background:#fff;border:1px solid #dfe4ec;color:#475569;font-size:11px;font-weight:600}
 .attachment-page .body{top:155px;bottom:100px;left:34px;right:34px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;border:0px solid #d9dee6;border-radius:2px;padding:10px;box-sizing:border-box}.attachment-page .attimg{width:100%;height:100%;object-fit:contain;display:block}.attachment-page .attlabel{position:absolute;left:34px;right:34px;bottom:96px;text-align:center;font:600 10px Calibri,Arial,sans-serif;color:#647084;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.attachment-page .bd{left:34px;top:102px;background:#1f4e79;font-size:11px;padding:4px 13px;border-radius:4px;letter-spacing:.2px}.attachment-page .rd{left:34px;right:34px;top:132px;font-size:10.5px;color:#475569}.attachment-page .ft{background:#fff}
 @media(max-width:560px){.reqcustom{flex-direction:column}.reqcustom button{width:100%}}
+.bld{margin-top:22px;border:1px solid var(--bd);border-radius:16px;padding:18px;background:linear-gradient(145deg,var(--card),var(--in));box-shadow:0 8px 24px -16px rgba(15,28,46,.35)}
+.bldhead{display:flex;align-items:center;gap:12px;margin-bottom:16px;grid-column:1/-1;padding-bottom:12px;border-bottom:1px solid var(--bd)}.bldhead b{font-size:14.5px;color:var(--tx)}.bldhead .sp{flex:1}
+.bldno{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,#d9a84e,#8a6d2b);color:#fff;font-weight:800;font-size:14px;flex:none}
+.bldrm{border:1px solid #e9b8b3;background:#fff5f4;color:#b42318;border-radius:9px;padding:7px 14px;font:700 12.5px 'Manrope',system-ui,sans-serif;cursor:pointer;transition:.15s}.bldrm:hover{background:#fee4e2}
+.bldamt{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding:12px 16px;border-radius:12px;background:var(--card);border:1px solid var(--bd);font-weight:600;color:var(--mut)}.bldamt b{font-size:17px;font-weight:800;color:var(--ac)}
+.addbld{display:block;width:100%;margin-top:20px;padding:13px;border:1.5px dashed var(--ac);border-radius:12px;background:transparent;color:var(--ac);font:700 13.5px 'Manrope',system-ui,sans-serif;cursor:pointer;transition:.15s}.addbld:hover{background:var(--in)}
+@media (max-width:600px){.bld{padding:14px}.bldhead{flex-wrap:wrap}}
+.reqhead>div>span{display:block;margin-top:3px;font-weight:500}.reqhead>span{white-space:nowrap;background:var(--in);border:1px solid var(--bd);padding:3px 10px;border-radius:99px}
+.reqcustom{flex-wrap:wrap}.reqcustom input{flex:1 1 180px;min-width:0}.reqcustom button{flex:none;white-space:nowrap}
+.bld .reqbox{margin-top:18px}.bld .reqgrid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
 </style></head>
 <body><div id="root"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
@@ -134,7 +144,7 @@ const areaOf=s=>{const m=String(s||'').match(/\d+(?:\.\d+)?/g)||[];return m.leng
 const cityTitle=s=>String(s||'').toLowerCase().replace(/(^|\s)\S/g,c=>c.toUpperCase());
 const NAf=a=>a.map(v=>String(v||'').trim()||'NA');
 const effv=d=>({Rv:NAf(d.r),Gv:NAf(d.g),Vv:NAf(d.v),Bv:NAf(d.b),Cv:d.cOn?NAf(d.c):CL.map(()=>'NA'),Ov:d.oOn?NAf(d.o):OL.map(()=>'NA'),Xv:d.xOn?NAf(d.x):XL.map(()=>'NA')});
-const init={ref:mkRef(getNext(),today()),date:today(),toName:'',city:'',state:'',pin:'',gst:'',project:'',size:'',rate:'',cover:'',cOn:false,oOn:false,xOn:false,person:'',phone:'',email:'',addr:'',loc:'',startDate:'',b:BL.map(()=>''),r:RL.map(()=>''),g:GL.map(()=>''),v:VL.map(()=>''),c:CL.map(()=>''),o:OL.map(()=>''),x:XL.map(()=>''),particulars:PARTICULARS.map(()=>true),customParticulars:[],attachments:[]};
+const init={ref:mkRef(getNext(),today()),date:today(),toName:'',city:'',state:'',pin:'',gst:'',project:'',size:'',rate:'',cover:'',cOn:false,oOn:false,xOn:false,extra:[],useCover:false,person:'',phone:'',email:'',addr:'',loc:'',startDate:'',b:BL.map(()=>''),r:RL.map(()=>''),g:GL.map(()=>''),v:VL.map(()=>''),c:CL.map(()=>''),o:OL.map(()=>''),x:XL.map(()=>''),particulars:PARTICULARS.map(()=>true),customParticulars:[],attachments:[]};
 
 const inr=n=>Number(n||0).toLocaleString('en-IN');
 const fd=s=>s?s.split('-').reverse().join('/'):'';
@@ -166,7 +176,7 @@ function mk(d){
    if(typeof r==='string')row(h('td',{colSpan:3,className:'bn'},r),'',1,w);
    else if(r.H)row(r.H.map((c,j)=>h('td',{key:j},c)),'hh',1,w);
    else row(r.map((c,j)=>h('td',{key:j},c)),'',0,w);});sp();};
- const area=areaOf(d.size),tot=area*(+d.rate||0),{Bv,Cv,Ov,Xv,Rv,Gv,Vv}=effv(d);
+ const area=areaOf(d.size),tot=area*(+d.rate||0),ex=(d.extra||[]).map(e=>{const a=areaOf(e.size);return{...e,a,t:a*(+e.rate||0),sp:[...PARTICULARS.filter((_,j)=>e.par?.[j]),...(e.cus||[])]}}),grand=tot+ex.reduce((a,e)=>a+e.t,0),{Bv,Cv,Ov,Xv,Rv,Gv,Vv}=effv(d);
  const selectedParticulars=[...PARTICULARS.filter((_,i)=>d.particulars?.[i]),...(d.customParticulars||[])];
  hd('Section 1. BUILDING DESCRIPTION','Building Description');
  tbl(['BUILDING TYPE',H('S.No.','Parameter','Details'),...rows(BL,Bv)]);tbl(['ROOF & CLADDING',H('S.No.','Parameter','Details'),...rows(RL,Rv)]);if(d.xOn)tbl(['CRANE REQUIREMENTS',H('S.No.','Parameter','Details'),...rows(XL,Xv)]);tbl(['GUTTER',H('S.No.','Parameter','Details'),...rows(GL,Gv)]);tbl(['VENTILATOR',H('S.No.','Parameter','Details'),...rows(VL,Vv)]);if(d.cOn)tbl(['CANOPY',H('S.No.','Parameter','Details'),...rows(CL,Cv)]);
@@ -191,7 +201,7 @@ function mk(d){
  hd('Section 7. PRICES :Pre-Engineered Steel Building','Prices');
  row(h('td',{colSpan:5,className:'ctr',style:{fontSize:14}},'PRE-ENGINEERED STEEL BUILDING – A TYPE'),'',1,W5);
  row(['SL.NO','PARTICULAR','AREA','RATE/SQFT','AMOUNT(RS)'].map(x=>h('td',{key:x,style:{textAlign:'center'}},x)),'',1,W5);
- row([h('td',{key:1,style:{verticalAlign:'top'}},'1'),h('td',{key:2,style:{verticalAlign:'top',paddingBottom:14}},'PRE-ENGINEERED STEEL BUILDING – '+d.size,h('div',{style:{marginTop:14,lineHeight:1.9}},selectedParticulars.length?selectedParticulars.map(x=>h('div',{key:x},'☑  '+x)):h('div',null,'No particular requirements selected'))),h('td',{key:3,style:{verticalAlign:'middle',textAlign:'center'}},inr(area),h('br'),'SQ. FT'),h('td',{key:4,style:{verticalAlign:'middle',textAlign:'center'}},'₹'+inr(d.rate)),h('td',{key:5,style:{verticalAlign:'middle',textAlign:'center'}},'₹'+inr(tot)+'/-')],'',0,W5);sp(10);
+ row([h('td',{key:1,style:{verticalAlign:'top'}},'1'),h('td',{key:2,style:{verticalAlign:'top',paddingBottom:14}},'PRE-ENGINEERED STEEL BUILDING – '+d.size,h('div',{style:{marginTop:14,lineHeight:1.9}},selectedParticulars.length?selectedParticulars.map(x=>h('div',{key:x},'☑  '+x)):h('div',null,'No particular requirements selected'))),h('td',{key:3,style:{verticalAlign:'middle',textAlign:'center'}},inr(area),h('br'),'SQ. FT'),h('td',{key:4,style:{verticalAlign:'middle',textAlign:'center'}},'₹'+inr(d.rate)),h('td',{key:5,style:{verticalAlign:'middle',textAlign:'center'}},'₹'+inr(tot)+'/-')],'',0,W5);ex.forEach((e,i)=>row([h('td',{key:1,style:{verticalAlign:'top'}},String(i+2)),h('td',{key:2,style:{verticalAlign:'top',paddingBottom:14}},'PRE-ENGINEERED STEEL BUILDING – '+(e.size||''),h('div',{style:{marginTop:14,lineHeight:1.9}},e.sp.length?e.sp.map(x=>h('div',{key:x},'☑  '+x)):h('div',null,'No particular requirements selected'))),h('td',{key:3,style:{verticalAlign:'middle',textAlign:'center'}},inr(e.a),h('br'),'SQ. FT'),h('td',{key:4,style:{verticalAlign:'middle',textAlign:'center'}},'₹'+inr(e.rate)),h('td',{key:5,style:{verticalAlign:'middle',textAlign:'center'}},'₹'+inr(e.t)+'/-')],'',0,W5));sp(10);
  hd('OPTIONAL');list(['i)  Civil Works: RCC foundations, footings, flooring, and civil masonry works are excluded from the above scope and will be quoted separately, if required to be included in our scope.','ii)  Roof Ventilator will be charged at Rs.7500/- per piece.','iii)  Doors & Windows will be charged at actual.','iv)  Transport will be extra at actual.']);
  hd('1. Terms & Conditions:');para('GST 18% excluding; Taxes are subjected to change as levied by the Government. If there is any change in GST Tax, Excise tariff or statutory levels imposed by the government at the time of shipment, such additional charges to be borne by the Buyer.');
  hd('2. Payment Terms:');list(['• 10% Advance along with Work order / Signed contract.','• 40% At the stage of approval of drawings or design report.','• 25% Against PEB Materials in-ward at site (Before Erection).','• 20% Against completion of Structural Erection (Before Sheeting).','• 05% Against completion of Sheet fixing.']);
@@ -233,7 +243,7 @@ function buildPages(d,lay,B,logo){
    return h('div',{className:'blk',key:bi,style:b.tb?undefined:{paddingBottom:per}},b.el(first,b.tb?lay.hs[bi]+per:undefined));});
   return Pg(k+3,d,logo,kids,undefined);});
  const attachments=(d.attachments||[]).map((a,i)=>AttachmentPg(NP+3+i,d,logo,a));
- return [cover,letter,index,...flow,...attachments];
+ return [...(d.useCover?[cover]:[]),letter,index,...flow,...attachments];
 }
 function Doc({d,logo,zoom}){
  const B=useMemo(()=>mk(d),[d]),mr=useRef(null),[lay,setLay]=useState(null);
@@ -264,7 +274,8 @@ async function makeDocx(d,logo,dimFn){
  const cw3=[700,5300,4506],C=AlignmentType.CENTER;
  const tbl=rs=>new Table({width:{size:W,type:WidthType.DXA},columnWidths:cw3,rows:rs.map(r=>typeof r==='string'?new TableRow({children:[cell(r,W,{span:3,fill:HF,color:'FFFFFF',bold:true,align:C})]}):r.H?new TableRow({children:r.H.map((c,i)=>cell(c,cw3[i],{fill:HF,color:'FFFFFF',bold:true,align:C}))}):new TableRow({cantSplit:true,children:r.map((c,i)=>cell(c,cw3[i]))}))});
  const gap=()=>new Paragraph({spacing:{before:0,after:60},children:[]});
- const {Bv,Cv,Ov,Xv,Rv,Gv,Vv}=effv(d),area=areaOf(d.size),tot=area*(+d.rate||0),date=fd(d.date);
+ const pc=(t,w,o={})=>new TableCell({width:{size:w,type:WidthType.DXA},borders:BLS,margins:{top:60,left:100,right:100},verticalAlign:VerticalAlign.CENTER,...o,children:[new Paragraph({alignment:C,children:[run(t,{size:18,bold:!!o.bold})]})]});
+ const {Bv,Cv,Ov,Xv,Rv,Gv,Vv}=effv(d),area=areaOf(d.size),tot=area*(+d.rate||0),ex=(d.extra||[]).map(e=>{const a=areaOf(e.size);return{...e,a,t:a*(+e.rate||0),sp:[...PARTICULARS.filter((_,j)=>e.par?.[j]),...(e.cus||[])]}}),grand=tot+ex.reduce((a,e)=>a+e.t,0),date=fd(d.date);
  const selectedParticulars=[...PARTICULARS.filter((_,i)=>d.particulars?.[i]),...(d.customParticulars||[])];
  const hdr=num=>{const ch=[new Table({width:{size:W,type:WidthType.DXA},columnWidths:[1300,W-1300],rows:[new TableRow({children:[
    new TableCell({width:{size:1300,type:WidthType.DXA},borders:NBS,children:[new Paragraph({children:mkLogo?[mkLogo()]:[]})]}),
@@ -318,7 +329,7 @@ async function makeDocx(d,logo,dimFn){
    new TableRow({height:{value:2200,rule:HeightRule.ATLEAST},children:[
     new TableCell({width:{size:800,type:WidthType.DXA},borders:BLS,margins:{top:60,left:100,right:100},children:[new Paragraph({children:[run('1',{size:18})]})]}),
     new TableCell({width:{size:5106,type:WidthType.DXA},borders:BLS,margins:{top:60,left:100,right:100},children:[new Paragraph({children:[run('PRE-ENGINEERED STEEL BUILDING – '+(d.size||'').toUpperCase(),{size:18})]}),new Paragraph({children:[]}),...(selectedParticulars.length?selectedParticulars:['No particular requirements selected']).map(x=>new Paragraph({spacing:{before:40,after:60},children:[run('☑  '+x,{size:18})]}))]}),
-    ...[[inr(area)+' SQ. FT',1400],['₹'+inr(d.rate),1400],['₹'+inr(tot)+'/-',1800]].map(([t,w])=>new TableCell({width:{size:w,type:WidthType.DXA},borders:BLS,verticalAlign:VerticalAlign.CENTER,children:[new Paragraph({alignment:C,children:[run(t,{size:18})]})]}))]})]}),
+    ...[[inr(area)+' SQ. FT',1400],['₹'+inr(d.rate),1400],['₹'+inr(tot)+'/-',1800]].map(([t,w])=>new TableCell({width:{size:w,type:WidthType.DXA},borders:BLS,verticalAlign:VerticalAlign.CENTER,children:[new Paragraph({alignment:C,children:[run(t,{size:18})]})]}))]}),...ex.map((e,i)=>new TableRow({children:[pc(String(i+2),800),new TableCell({width:{size:5106,type:WidthType.DXA},borders:BLS,margins:{top:60,left:100,right:100},children:[new Paragraph({children:[run('PRE-ENGINEERED STEEL BUILDING – '+(e.size||'').toUpperCase(),{size:18})]}),new Paragraph({children:[]}),...(e.sp.length?e.sp:['No particular requirements selected']).map(x=>new Paragraph({spacing:{before:40,after:60},children:[run('☑  '+x,{size:18})]}))]}),pc(inr(e.a)+' SQ. FT',1400),pc('₹'+inr(e.rate),1400),pc('₹'+inr(e.t)+'/-',1800)]}))]}),
   HLt('OPTIONAL'),...['i) Civil Works: RCC foundations, footings, flooring, and civil masonry works are excluded from the above scope and will be quoted separately, if required to be included in our scope.','ii) Roof Ventilator will be charged at Rs.7500/- per piece.','iii) Doors & Windows will be charged at actual.','iv) Transport will be extra at actual.'].map(Li),
   HLt('1. Terms & Conditions:',true),P('GST 18% excluding; Taxes are subjected to change as levied by the Government. If there is any change in GST Tax, Excise tariff or statutory levels imposed by the government at the time of shipment, such additional charges to be borne by the Buyer.'),
   HLt('2. Payment Terms:'),...['• 10% Advance along with Work order / Signed contract.','• 40% At the stage of approval of drawings or design report.','• 25% Against PEB Materials in-ward at site (Before Erection).','• 20% Against completion of Structural Erection (Before Sheeting).','• 05% Against completion of Sheet fixing.'].map(Li),
@@ -339,7 +350,7 @@ async function makeDocx(d,logo,dimFn){
  }
  const pg=(top,extra)=>({page:{size:{width:11906,height:16838},margin:{top,bottom:1500,left:700,right:700,header:300,footer:250},...extra}});
  const doc=new Document({styles:{default:{document:{run:{font:FONT,size:21}}}},sections:[
-  {properties:pg(1500),headers:{default:hdr(false)},footers:{default:ftr(true)},children:cover},
+  ...(d.useCover?[{properties:pg(1500),headers:{default:hdr(false)},footers:{default:ftr(true)},children:cover}]:[]),
   {properties:pg(2300,{pageNumbers:{start:1}}),headers:{default:hdr(true)},footers:{default:ftr(false)},children:body}]});
  return Packer.toBlob(doc);
 }
@@ -353,7 +364,14 @@ function App(){
  const upA=(k,i,v)=>setD(x=>({...x,[k]:x[k].map((y,j)=>j===i?v:y)}));
  const grp=(t,k,labels,flag,note)=>{const on=flag?d[flag]:true;return h('div',{className:'card',id:'s-'+k},h('h2',null,t,flag&&h('label',{className:'tg'},h('span',null,'No'),h('input',{type:'checkbox',checked:on,'aria-label':t+' yes or no',onChange:e=>up(flag,e.target.checked)}),h('span',{className:'sl'}),h('span',{style:{color:on?'#15803d':undefined}},'Yes'))),
   h('div',{className:'g'},labels.map((l,i)=>SELS[k]&&SELS[k][i]?SEL(l,on?d[k][i]:'NA',v=>upA(k,i,v),SELS[k][i]):F(l,on?d[k][i]:'NA',v=>upA(k,i,v),'text',SAMPLE[k][i],!on))));};
- const total=areaOf(d.size)*(+d.rate||0);
+ const total=areaOf(d.size)*(+d.rate||0)+(d.extra||[]).reduce((a,e)=>a+areaOf(e.size)*(+e.rate||0),0);
+ const [cex,setCex]=useState({});
+ const reqBoxEx=(e,i)=>{const par=e.par||[],cus=e.cus||[],txt=cex[i]||'';const add=()=>{const v=txt.trim();if(!v)return;if(!cus.includes(v))upEx(i,'cus',[...cus,v]);setCex(c=>({...c,[i]:''}))};
+  return h('div',{className:'reqbox'},h('div',{className:'reqhead'},h('div',null,h('b',null,'Particular Requirements (serial no. '+(i+2)+')'),h('span',null,'Select what should appear in the quotation')),h('span',null,par.filter(Boolean).length+cus.length+' selected')),
+   h('div',{className:'reqgrid'},PARTICULARS.map((r,j)=>h('label',{className:'reqitem'+(par[j]?' on':''),key:r},h('input',{type:'checkbox',checked:!!par[j],onChange:()=>upEx(i,'par',PARTICULARS.map((_,k)=>k===j?!par[k]:!!par[k]))}),h('strong',null,r)))),
+   h('div',{className:'reqcustom'},h('input',{value:txt,onChange:ev=>setCex(c=>({...c,[i]:ev.target.value})),onKeyDown:ev=>{if(ev.key==='Enter')add()},placeholder:'Add another requirement…'}),h('button',{type:'button',onClick:add},'＋ Add Requirement')),
+   cus.length?h('div',{className:'reqcustomlist'},cus.map(r=>h('span',{className:'reqtag',key:r},r,h('button',{type:'button',onClick:()=>upEx(i,'cus',cus.filter(x=>x!==r)),style:{border:0,background:'none',marginLeft:6,cursor:'pointer',fontWeight:800,color:'#647084'}},'×')))):null);};
+ const upEx=(i,k,v)=>setD(p=>({...p,extra:p.extra.map((e,j)=>j===i?{...e,[k]:v}:e)}));
  const img=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>up('cover',r.result);r.readAsDataURL(f)};
  const toggleReq=i=>up('particulars',d.particulars.map((v,j)=>j===i?!v:v));
  const addReq=()=>{const v=customReq.trim();if(!v)return;if(!(d.customParticulars||[]).includes(v))up('customParticulars',[...(d.customParticulars||[]),v]);setCustomReq('');};
@@ -427,9 +445,9 @@ function App(){
     F('Ref No (auto – SIVPL/PEB: Ref: No:/)',d.ref,v=>up('ref',v),'text','SE/125/2026'),F('Date',d.date,v=>{up('date',v);if(refNum(d.ref)!=null)up('ref',mkRef(refNum(d.ref),v))},'date'),
     F('Person Name & Designation *',d.person,v=>up('person',v),'text',SAMPLE.person),F('Phone Number',d.phone,v=>up('phone',v),'text','+91 98765 43210'),F('Email ID',d.email,v=>up('email',v),'text','name@company.com'),F('To \u2013 Company Name',d.toName,v=>up('toName',v),'text',SAMPLE.toName),F('Company Address',d.addr,v=>up('addr',v),'text',SAMPLE.addr),F('Project Location',d.loc,v=>up('loc',v),'text',SAMPLE.loc),F('Project Starting Proposal Date *',d.startDate,v=>up('startDate',v),'date'),F('City',d.city,v=>up('city',v),'text',SAMPLE.city),F('GST No.',d.gst,v=>up('gst',v.toUpperCase().slice(0,15)),'text',SAMPLE.gst),
     F('Project name (cover & subject)',d.project,v=>up('project',v),'text',SAMPLE.project),
-    h('label',{className:'f',key:'img'},'Cover photo (optional)',h('input',{type:'file',accept:'image/*',onChange:img})))),
+    h('label',{className:'f',key:'uc'},'Include cover page?',h('select',{value:d.useCover?'yes':'no',onChange:e=>up('useCover',e.target.value==='yes')},h('option',{value:'no'},'No – quotation starts on first page'),h('option',{value:'yes'},'Yes – add cover page'))),d.useCover&&h('label',{className:'f',key:'img'},'Cover photo',h('input',{type:'file',accept:'image/*',onChange:img})))),
    grp('1. Building type & dimensions','b',BL),grp('2. Roof & cladding','r',RL),grp('3. Crane requirements \u2013 Crane required?','x',XL,'xOn'),grp('4. Gutter','g',GL),grp('5. Roof ventilator','v',VL),grp('6. Canopy \u2013 Canopy required?','c',CL,'cOn'),grp('7. Louver \u2013 Louver required?','o',OL,'oOn'),
-   h('div',{className:'card',id:'s-pr'},h('h2',null,'Section 7 – Prices'),h('div',{className:'g'},
+   h('div',{className:'card',id:'s-pr'},h('h2',null,'Section 7 – Prices'),h('div',{className:'g'},h('div',{className:'bldhead',key:'b1h'},h('span',{className:'bldno'},'1'),h('b',null,'Building requirement 1')),
     F('Building size label (Length X Width)',d.size,v=>up('size',v),'text',SAMPLE.size),
     F('Area (sq ft) – auto = L × W',areaOf(d.size)?String(areaOf(d.size)):'',()=>{},'text','calculated from size label',true),
     h('div',{className:'reqbox'},
@@ -439,7 +457,13 @@ function App(){
       (d.customParticulars||[]).length?h('div',{className:'reqcustomlist'},d.customParticulars.map(r=>h('span',{className:'reqtag',key:r},r,h('button',{type:'button',onClick:()=>removeReq(r),style:{border:0,background:'none',marginLeft:6,cursor:'pointer',fontWeight:800,color:'#647084'}},'×')))):null),
     h('div',{className:'attachbox'},h('b',null,'Quotation Attachments'),h('small',null,'Attach building drawings / reference images. Each image will be placed on its own PDF page after page 8, keeping the header and footer.'),h('label',{className:'attachbtn'},'＋ Attach Images',h('input',{type:'file',accept:'image/*',multiple:true,onChange:attach})),(d.attachments||[]).length?h('div',{className:'attachlist'},d.attachments.map((a,i)=>h('span',{className:'attachtag',key:a.name+'-'+i},a.name,h('button',{type:'button',onClick:()=>removeAttachment(a.name),style:{border:0,background:'none',marginLeft:6,cursor:'pointer',fontWeight:800,color:'#647084'}},'×')))):null),
     F('Rate per sq ft (₹)',d.rate,v=>up('rate',v),'number',SAMPLE.rate)),
-    h('div',{className:'sum'},h('span',null,'Total'),h('b',null,'₹'+inr(total)+'/-'))),
+    h('div',{key:'pricewrap',style:{gridColumn:'1/-1',width:'100%',minWidth:0}},
+    (d.extra||[]).map((e,i)=>h('div',{key:'ex'+i,className:'bld'},
+     h('div',{className:'bldhead'},h('span',{className:'bldno'},String(i+2)),h('b',null,'Building requirement '+(i+2)),h('span',{className:'sp'}),h('button',{type:'button',className:'bldrm',onClick:()=>setD(p=>({...p,extra:p.extra.filter((_,j)=>j!==i)}))},'Remove')),
+     h('div',{className:'g'},F('Building size label (Length X Width)',e.size,v=>upEx(i,'size',v),'text','e.g. 60X30'),F('Area (sq ft) – auto = L × W',areaOf(e.size)?String(areaOf(e.size)):'',()=>{},'text','calculated from size label',true),F('Rate per sq ft (₹)',e.rate,v=>upEx(i,'rate',v),'number','554'),reqBoxEx(e,i)),
+     h('div',{className:'bldamt'},h('span',null,'Amount (area × rate)'),h('b',null,'₹'+inr(areaOf(e.size)*(+e.rate||0))+'/-')))),
+    h('button',{type:'button',className:'addbld',onClick:()=>setD(p=>({...p,extra:[...(p.extra||[]),{size:'',rate:'',par:[...(p.particulars||[])],cus:[]}]}))},'+ Add another building requirement'),
+    h('div',{className:'sum'},h('span',null,'Total'),h('b',null,'₹'+inr(total)+'/-')))),
    h('div',{className:'msg'},msg),
    doc&&h('div',{id:'pv'},h('div',{className:'pvh'},h('h3',null,'Preview'),h('div',{className:'btns'},h('button',{className:'btn g2',disabled:busy,onClick:()=>download('pdf')},busy?'Please wait\u2026':'Download PDF'),h('button',{className:'btn',style:{background:'linear-gradient(180deg,#3b6fd0,#2a56a8)'},disabled:busy,onClick:()=>download('word')},busy?'Please wait\u2026':'Download Word'))),h('div',{className:'pv'},h(Doc,{d:doc,logo,zoom})))))));
 }
