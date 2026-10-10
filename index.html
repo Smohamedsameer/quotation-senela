@@ -160,7 +160,7 @@ const SHEET='Providing and Fixing of single Skin Senela Profile, Overall Width o
 const W3=[52,'56%',null],W5=[46,null,74,74,108];
 const cg=w=>h('colgroup',null,w.map((x,i)=>h('col',{key:i,style:x?{width:x}:{}})));
 const Hdr=logo=>h('div',{className:'hd'},h('img',{src:logo,crossOrigin:'anonymous',alt:'logo'}),h('div',{className:'cn'},'SENELA INTERNATIONAL VENTURES PRIVATE LIMITED'));
-const Ftr=cov=>h('div',{className:'ft'},h('img',{src:ISO,alt:'ISO'}),h('div',null,'Tel: + 91 '+(cov?'9942466663':'0447970026')+', Corporate office: - No: - 3, 3A, 3rd Floor, K&T Business Tower,',h('br'),'Gowri Ammal 1st Street, Porur, Rajagopal Nagar, Chennai-600116',h('br'),'Factory: - No:-32,33&34, SIDCO Nagapanam, Email: info@senelainternaonal.com',h('br'),'Commercial Reg.No. U23955TN2023PTC166250'+(cov?',':',Paid-up Capital: INR. 1,000,000.')));
+const Ftr=cov=>h('div',{className:'ft'},h('img',{src:ISO,alt:'ISO'}),h('div',null,'Tel: + 91 '+(cov?'9942466663':'0447970026')+', Corporate office: - No: - 3, 3A, 3rd Floor, K&T Business Tower,',h('br'),'Gowri Ammal 1st Street, Porur, Rajagopal Nagar, Chennai-600116',h('br'),'Factory: - No:-32,33&34, SIDCO Nagapattinam, Email: info@senelainternational.com',h('br'),'Commercial Reg.No. U23955TN2023PTC166250'+(cov?',':',Paid-up Capital: INR. 1,000,000.')));
 const Pg=(n,d,logo,kids,bst)=>h('div',{className:'page',key:'p'+n},Hdr(logo),h('div',{className:'bd'},n),h('div',{className:'rd'},h('span',null,'SIVPL/PEB: Ref: No:/'+d.ref),h('span',null,'Date: '+fd(d.date))),h('div',{className:'body',style:bst},kids),Ftr());
 const Sign=()=>h('img',{src:SIG,alt:'Managing Director signature',style:{width:300,display:'block',margin:'4px 0'}});
 
