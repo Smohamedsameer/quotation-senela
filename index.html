@@ -139,7 +139,11 @@ const setNext=n=>{try{localStorage.setItem(KEY,String(n))}catch(e){}};
 const mkRef=(n,date)=>'SE/'+n+'/'+((date||'').slice(0,4)||new Date().getFullYear());
 const refNum=r=>{const m=/^SE\/(\d+)\//.exec((r||'').trim());return m?+m[1]:null};
 const today=()=>{const t=new Date();return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0')};
-/* area = length x width taken from the building size label (84X38 -> 3192) */
+/* Convert Section 1 dimensions to feet so the pricing area is always calculated in sq ft. */
+const dimensionFeet=s=>{const raw=String(s||'').trim();const m=raw.match(/\d+(?:\.\d+)?/);if(!m)return 0;const n=parseFloat(m[0]);return /\b(?:m|mtr|meter|meters|metre|metres)\b/i.test(raw)?n*3.280839895:n};
+const fmtDim=n=>n?String(Math.round(n*100)/100):'';
+const sizeFromBuilding=b=>{const length=dimensionFeet(b?.[6]),width=dimensionFeet(b?.[3]);return length&&width?fmtDim(length)+' X '+fmtDim(width):''};
+/* area = length x width in feet (e.g. 275.59 X 124.67 -> sq ft) */
 const areaOf=s=>{const m=String(s||'').match(/\d+(?:\.\d+)?/g)||[];return m.length<2?0:Math.round(m.reduce((a,x)=>a*parseFloat(x),1)*100)/100};
 const cityTitle=s=>String(s||'').toLowerCase().replace(/(^|\s)\S/g,c=>c.toUpperCase());
 const NAf=a=>a.map(v=>String(v||'').trim()||'NA');
@@ -287,7 +291,7 @@ async function makeDocx(d,logo,dimFn){
   return new Header({children:ch})};
  const ftr=cov=>new Footer({children:[new Table({width:{size:W,type:WidthType.DXA},columnWidths:[1700,W-1700],rows:[new TableRow({children:[
    new TableCell({width:{size:1700,type:WidthType.DXA},borders:NBS,verticalAlign:VerticalAlign.CENTER,children:[new Paragraph({children:mkIso?[mkIso()]:[]})]}),
-   new TableCell({width:{size:W-1700,type:WidthType.DXA},borders:NBS,verticalAlign:VerticalAlign.CENTER,children:['Tel: + 91 '+(cov?'9942466663':'0447970026')+', Corporate office: - No: - 3, 3A, 3rd Floor, K&T Business Tower,','Gowri Ammal 1st Street, Porur, Rajagopal Nagar, Chennai-600116','Factory: - No:-32,33&34, SIDCO Nagapanam, Email: info@senelainternaonal.com','Commercial Reg.No. U23955TN2023PTC166250'+(cov?',':',Paid-up Capital: INR. 1,000,000.')].map(x=>new Paragraph({spacing:{before:0,after:0},children:[run(x,{size:16})]}))})]})]})]});
+   new TableCell({width:{size:W-1700,type:WidthType.DXA},borders:NBS,verticalAlign:VerticalAlign.CENTER,children:['Tel: + 91 '+(cov?'9942466663':'0447970026')+', Corporate office: - No: - 3, 3A, 3rd Floor, K&T Business Tower,','Gowri Ammal 1st Street, Porur, Rajagopal Nagar, Chennai-600116','Factory: - No:-32,33&34, SIDCO Nagapattinam, Email: info@senelainternational.com','Commercial Reg.No. U23955TN2023PTC166250'+(cov?',':',Paid-up Capital: INR. 1,000,000.')].map(x=>new Paragraph({spacing:{before:0,after:0},children:[run(x,{size:16})]}))})]})]})]});
  const ban=(fill,ch)=>new Table({width:{size:W,type:WidthType.DXA},columnWidths:[W],rows:[new TableRow({children:[new TableCell({width:{size:W,type:WidthType.DXA},borders:NBS,shading:{type:ShadingType.CLEAR,fill,color:'auto'},margins:{top:140,bottom:140,left:200,right:200},children:ch})]})]});
  const ctr=(t,o)=>new Paragraph({alignment:C,spacing:{before:20,after:20},children:[new TextRun({text:t,font:'Arial',color:'FFFFFF',...o})]});
  const title=[d.project,d.loc].filter(Boolean).join(' – ').toUpperCase();
@@ -361,7 +365,7 @@ function App(){
  const [d,setD]=useState(init),[doc,setDoc]=useState(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState(''),[logo,setLogo]=useState(LOGO0),[customReq,setCustomReq]=useState(''),[editingOptional,setEditingOptional]=useState(false),[optionalDraft,setOptionalDraft]=useState((init.optionalText||DEFAULT_OPTIONAL).join('\n'));
  useEffect(()=>{fetch(LOGO0,{mode:'cors'}).then(r=>r.blob()).then(b=>new Promise(ok=>{const r=new FileReader();r.onload=()=>ok(r.result);r.readAsDataURL(b)})).then(setLogo).catch(()=>{})},[]);
  const up=(k,v)=>setD(x=>({...x,[k]:v}));
- const upA=(k,i,v)=>setD(x=>({...x,[k]:x[k].map((y,j)=>j===i?v:y)}));
+ const upA=(k,i,v)=>setD(x=>{const next={...x,[k]:x[k].map((y,j)=>j===i?v:y)};if(k==='b'&&(i===3||i===6))next.size=sizeFromBuilding(next.b);return next});
  const grp=(t,k,labels,flag,note)=>{const on=flag?d[flag]:true;return h('div',{className:'card',id:'s-'+k},h('h2',null,t,flag&&h('label',{className:'tg'},h('span',null,'No'),h('input',{type:'checkbox',checked:on,'aria-label':t+' yes or no',onChange:e=>up(flag,e.target.checked)}),h('span',{className:'sl'}),h('span',{style:{color:on?'#15803d':undefined}},'Yes'))),
   h('div',{className:'g'},labels.map((l,i)=>SELS[k]&&SELS[k][i]?SEL(l,on?d[k][i]:'NA',v=>upA(k,i,v),SELS[k][i]):F(l,on?d[k][i]:'NA',v=>upA(k,i,v),'text',SAMPLE[k][i],!on))));};
  const total=areaOf(d.size)*(+d.rate||0)+(d.extra||[]).reduce((a,e)=>a+areaOf(e.size)*(+e.rate||0),0);
@@ -448,7 +452,7 @@ function App(){
     h('label',{className:'f',key:'uc'},'Include cover page?',h('select',{value:d.useCover?'yes':'no',onChange:e=>up('useCover',e.target.value==='yes')},h('option',{value:'no'},'No – quotation starts on first page'),h('option',{value:'yes'},'Yes – add cover page'))),d.useCover&&h('label',{className:'f',key:'img'},'Cover photo',h('input',{type:'file',accept:'image/*',onChange:img})))),
    grp('1. Building type & dimensions','b',BL),grp('2. Roof & cladding','r',RL),grp('3. Crane requirements \u2013 Crane required?','x',XL,'xOn'),grp('4. Gutter','g',GL,'gOn'),grp('5. Roof ventilator','v',VL,'vOn'),grp('6. Canopy \u2013 Canopy required?','c',CL,'cOn'),grp('7. Louver \u2013 Louver required?','o',OL,'oOn'),
    h('div',{className:'card',id:'s-pr'},h('h2',null,'Section 7 – Prices'),h('div',{className:'g'},h('div',{className:'bldhead',key:'b1h'},h('span',{className:'bldno'},'1'),h('b',null,'Building requirement 1')),
-    F('Building size label (Length X Width)',d.size,v=>up('size',v),'text',SAMPLE.size),
+    F('Building size label (Length * Width)',d.size,()=>{},'text','Auto-filled from Section 1 dimensions',true),
     F('Area (sq ft) – auto = L × W',areaOf(d.size)?String(areaOf(d.size)):'',()=>{},'text','calculated from size label',true),
     h('div',{className:'reqbox'},
       h('div',{className:'reqhead'},h('div',null,h('b',null,'Particular Requirements'),h('span',null,'Select what should appear in the quotation')),h('span',null,(d.particulars||[]).filter(Boolean).length+(d.customParticulars||[]).length+' selected')),
