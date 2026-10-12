@@ -109,27 +109,22 @@ html{scroll-behavior:smooth}
 <div class="form-body">
 <div class="section-title" id="sec-info">Quotation information</div>
 <div class="field-grid">
-<div class="field"><label for="refNo">Reference number (after SIVPL/PEB: Ref: No:/)</label><input id="refNo" value="101/2026"></div>
-<div class="field"><label for="quoteDate">Date</label><input id="quoteDate" type="date" value="2026-10-10"></div>
+<div class="field"><label for="refNo">Reference number (after SIVPL/PEB: Ref: No:/)</label><input id="refNo" placeholder="e.g. 101/2026"></div>
+<div class="field"><label for="quoteDate">Date</label><input id="quoteDate" type="date"></div>
 <div class="field full"><label for="productType">Product / table type</label><select id="productType">
 <option value="kg">Steel plates / sheets — Rate per Kg</option><option value="piece">Products — Rate per Piece</option><option value="set">Hardware — Rate per Set</option><option value="mt">Bulk steel — Rate per MT</option><option value="area">Roofing / cladding — Rate per Sq. Ft.</option><option value="sqm">Roofing / cladding — Rate per Sq. M.</option><option value="length">Length-based — Rate per Running Metre</option><option value="volume">Bulk materials — Rate per CFT</option><option value="litre">Paint / chemicals — Rate per Litre</option><option value="bag">Bagged materials — Rate per Bag</option><option value="job">Fabrication / installation — Rate per Job</option><option value="custom">Custom unit — Enter your own unit</option></select></div>
 </div>
 <div class="section-title" id="sec-cust">Customer / To address</div>
 <div class="field-grid">
-<div class="field full"><label for="customer">Company / customer name</label><input id="customer" value="M/s FEEL FRESH BUILDERS PRIVATE LIMITED"></div>
-<div class="field full"><label for="address">Address</label><textarea id="address">No. F1, Nethra’s, No. 103, 4th Street,
-Ashta Lakshmi Nagar, Valasaravakkam,
-Chennai, Tamil Nadu - 600087</textarea></div>
-<div class="field full"><label for="attention">Kind attention</label><input id="attention" value="Mr. Velmurugan – Chairman"></div>
-<div class="field full"><label for="subject">Subject</label><input id="subject" value="Quotation for supply of materials"></div>
-<div class="field full"><label for="salutation">Greeting</label><input id="salutation" value="Dear Sir,"></div>
+<div class="field full"><label for="customer">Company / customer name</label><input id="customer" placeholder="e.g. M/s ABC Builders Pvt Ltd"></div>
+<div class="field full"><label for="address">Address</label><textarea id="address" placeholder="e.g. No. 12, Main Road,&#10;Anna Nagar, Chennai - 600040"></textarea></div>
+<div class="field full"><label for="attention">Kind attention</label><input id="attention" placeholder="e.g. Mr. Kumar – Manager"></div>
+<div class="field full"><label for="subject">Subject</label><input id="subject" placeholder="e.g. Quotation for supply of steel plates"></div>
+<div class="field full"><label for="salutation">Greeting</label><input id="salutation" placeholder="e.g. Dear Sir,"></div>
 </div>
 <div class="section-title" id="sec-content">Quotation content</div>
-<div class="field"><label for="intro">Editable description / introductory content</label><textarea id="intro">We are pleased to submit our valuable offer for the following materials.</textarea></div>
-<div class="field"><label for="terms">Terms &amp; conditions (one per line)</label><textarea id="terms">Validity of offer: Offer is valid only for 5 days.
-Payment terms: Advance payment.
-GST 18% extra.
-Transport will be charged extra.</textarea></div>
+<div class="field"><label for="intro">Editable description / introductory content</label><textarea id="intro" placeholder="e.g. We are pleased to submit our offer for the following materials."></textarea></div>
+<div class="field"><label for="terms">Terms &amp; conditions (one per line)</label><textarea id="terms" placeholder="e.g. Validity of offer: 15 days.&#10;Payment terms: Advance.&#10;GST 18% extra."></textarea></div>
 <div class="section-title" id="sec-items">Product line items</div>
 <div class="option-note" id="unitHint"></div>
 <div class="items-top"><div class="section-title">Items in quotation</div><button type="button" class="btn btn-soft" id="addItem">+ Add item</button></div>
@@ -204,12 +199,11 @@ function buildDocx(D, M, I) {
   const para = (txt) => String(txt || "").split("\n").map((t) => P([tr(t)], { alignment: AlignmentType.JUSTIFIED }));
   const body = [
     P([tr("QUOTATION")], { alignment: AlignmentType.CENTER, spacing: { after: 240 } }),
-    P([tr("To")], { spacing: { after: 0 } }),
-    P(lines(M.toLines)),
-    P([tr(M.subject)], { spacing: { before: 200, after: 160 } }),
-    P([tr(M.salutation)]), ...para(M.intro),
+    ...(M.toLines.length ? [P([tr("To")], { spacing: { after: 0 } }), P(lines(M.toLines))] : []),
+    ...(M.subject ? [P([tr(M.subject)], { spacing: { before: 200, after: 160 } })] : []),
+    ...(M.salutation.trim() ? [P([tr(M.salutation)])] : []), ...para(M.intro),
     items,
-    P([tr("Terms & Conditions:", { size: 24, highlight: "yellow" })], { spacing: { before: 280, after: 100 } }),
+    ...(M.terms.length ? [P([tr("Terms & Conditions:", { size: 24, highlight: "yellow" })], { spacing: { before: 280, after: 100 } })] : []),
     ...M.terms.map((t) => P([tr(t)], { alignment: AlignmentType.JUSTIFIED })),
     P([tr("Thanking you,")], { spacing: { before: 240, after: 0 } }),
     P([tr("Very truly yours,")], { spacing: { after: 0 } }),
@@ -251,10 +245,10 @@ let logoSrc = LOGO_URL, logoImg = null, itemCount = 0;
 function addItem(data={}) {
   itemCount++; const first = itemCount===1, ty = getType(), card = document.createElement('div'); card.className='item-card';
   card.innerHTML = `<div class="item-card-head"><strong>Product item <span class="item-number"></span></strong><button type="button" class="btn btn-danger remove-item">Remove</button></div>
-  <div class="field"><label>Description / product name</label><input class="item-desc" value="${esc(data.desc ?? (first?'Mild Steel Chequered Plate':''))}" placeholder="e.g. Mild Steel Chequered Plate"></div>
-  <div class="field"><label>Specification / size / thickness</label><textarea class="item-spec" rows="2" placeholder="e.g. 4 mm thick, 1250 × 2500 mm">${esc(data.spec ?? (first?'4 mm thick\nSize: 1250 × 2500 mm':''))}</textarea></div>
-  <div class="field-grid"><div class="field"><label class="qty-label">${esc(ty.qty)}</label><input class="item-qty" type="number" min="0" step="any" value="${esc(data.qty ?? (first?'980':'1'))}"></div>
-  <div class="field"><label class="rate-label">${esc(ty.rate)}</label><input class="item-rate" type="number" min="0" step="any" value="${esc(data.rate ?? (first?'95':'0'))}"></div>
+  <div class="field"><label>Description / product name</label><input class="item-desc" value="${esc(data.desc ?? '')}" placeholder="e.g. Mild Steel Chequered Plate"></div>
+  <div class="field"><label>Specification / size / thickness</label><textarea class="item-spec" rows="2" placeholder="e.g. 4 mm thick, 1250 × 2500 mm">${esc(data.spec ?? '')}</textarea></div>
+  <div class="field-grid"><div class="field"><label class="qty-label">${esc(ty.qty)}</label><input class="item-qty" type="number" min="0" step="any" value="${esc(data.qty ?? '')}" placeholder="e.g. 100"></div>
+  <div class="field"><label class="rate-label">${esc(ty.rate)}</label><input class="item-rate" type="number" min="0" step="any" value="${esc(data.rate ?? '')}" placeholder="e.g. 95"></div>
   <div class="field custom-unit-field"><label>Custom unit name</label><input class="item-unit" value="${esc(data.unit ?? 'Unit')}" placeholder="e.g. Box"></div></div>
   <div class="hint">Line amount: <strong class="item-amount"></strong></div>`;
   $('items').appendChild(card);
@@ -268,23 +262,23 @@ function model() {
   const ty = getType(), custom = $('productType').value==='custom';
   let total = 0;
   const items = [...$('items').children].map(c => {
-    const qty = Number(c.querySelector('.item-qty').value)||0, rate = Number(c.querySelector('.item-rate').value)||0, u = c.querySelector('.item-unit').value||'Unit', amount = qty*rate;
+    const qs = c.querySelector('.item-qty').value, rs = c.querySelector('.item-rate').value, qty = Number(qs)||0, rate = Number(rs)||0, u = c.querySelector('.item-unit').value||'Unit', amount = qty*rate;
     total += amount;
     c.querySelector('.qty-label').textContent = ty.qty; c.querySelector('.rate-label').textContent = ty.rate;
     c.querySelector('.custom-unit-field').style.display = custom?'block':'none';
     c.querySelector('.item-amount').textContent = money(amount);
     return { desc:c.querySelector('.item-desc').value, spec:c.querySelector('.item-spec').value,
-      qtyDisp: qty.toLocaleString('en-IN',{maximumFractionDigits:3})+(custom?' '+u:''), rateDisp: money(rate)+(custom?' / '+u:''), amountDisp: money(amount) };
+      qtyDisp: qs===''?'':qty.toLocaleString('en-IN',{maximumFractionDigits:3})+(custom?' '+u:''), rateDisp: rs===''?'':money(rate)+(custom?' / '+u:''), amountDisp: (qs===''&&rs==='')?'':money(amount) };
   });
   [...$('items').children].forEach((c,i)=>c.querySelector('.item-number').textContent=i+1);
   const addr = $('address').value.split(/\n+/).map(s=>s.trim()).filter(Boolean);
-  const toLines = [$('customer').value+',']
+  const toLines = ($('customer').value.trim()?[$('customer').value.trim()+',']:[])
     .concat($('attention').value?['Kind Attn: '+$('attention').value+',']:[])
     .concat(addr.map((l,i)=>l.replace(/[,.]+$/,'')+(i===addr.length-1?'.':',')));
   const split = s => $('terms').value.split('\n').map(x=>x.trim()).filter(Boolean);
   const nl = id => $(id).value.split('\n').map(x=>x.trim()).filter(Boolean);
   return { ref:$('refNo').value, dateText:($('quoteDate').value||'').split('-').reverse().join('/'), columns:ty.columns, items, total, totalDisp:money(total),
-    toLines, subject:'Sub: '+$('subject').value+' - reg', salutation:$('salutation').value, intro:$('intro').value,
+    toLines, subject:$('subject').value.trim()?'Sub: '+$('subject').value.trim()+' - reg':'', salutation:$('salutation').value, intro:$('intro').value,
     terms:split().map((t,i)=>(i+1)+'. '+t), signatory:$('signatory').value, designation:$('designation').value,
     footerLines:[...nl('office'),...nl('factory'),...nl('regNo')] };
 }
@@ -306,8 +300,8 @@ function render() {
   const el = (html, cls, tag='div') => { const e = document.createElement(tag); if (cls) e.className = cls; e.innerHTML = html; return e; };
   const place = node => { body.appendChild(node); if (over() && body.children.length>1) { body.removeChild(node); newPage(); body.appendChild(node); } };
   place(el('QUOTATION','ctr'));
-  place(el('To<br>'+br(M.toLines)));
-  place(el(esc(M.subject),'','p')); place(el(esc(M.salutation),'','p'));
+  if (M.toLines.length) place(el('To<br>'+br(M.toLines)));
+  if (M.subject) place(el(esc(M.subject),'','p')); if (M.salutation.trim()) place(el(esc(M.salutation),'','p'));
   M.intro.split('\n').filter(Boolean).forEach(t => place(el(esc(t),'','p')));
   const mkTable = () => { const t = document.createElement('table'); t.className='t';
     t.innerHTML = '<colgroup><col style="width:46px"><col><col style="width:110px"><col style="width:110px"><col style="width:120px"></colgroup><thead><tr>'+M.columns.map(c=>'<th>'+esc(c)+'</th>').join('')+'</tr></thead><tbody></tbody>'; return t; };
@@ -319,7 +313,7 @@ function render() {
     tb.appendChild(r);
     if (over()) { tb.removeChild(r); newPage(); tbl = mkTable(); body.appendChild(tbl); tb = tbl.tBodies[0]; tb.appendChild(r); }
   });
-  place(el('Terms &amp; Conditions:','sh'));
+  if (M.terms.length) place(el('Terms &amp; Conditions:','sh'));
   M.terms.forEach(t => place(el(esc(t),'','p')));
   place(el('<div style="margin-top:20px">Thanking you,<br>Very truly yours,<br>For Senela International Ventures Pvt. Ltd.</div><img src="'+SIG+'" alt="signature" style="width:230px;height:95px;display:block;margin:2px 0"><div>'+esc(M.signatory)+'<br>'+esc(M.designation)+'</div>'));
   fit();
@@ -353,7 +347,7 @@ $('docBtn').onclick = e => busy(e.target, async () => {
   save(await docx.Packer.toBlob(buildDocx(docx, model(), I)), fname('docx'));
 });
 $('resetBtn').onclick = () => { if (confirm('Reset all fields to the sample quotation?')) location.reload(); };
-$('addItem').onclick = () => addItem({desc:'',spec:'',qty:'1',rate:'0'});
+$('addItem').onclick = () => addItem();
 $('productType').addEventListener('change', render);
 document.querySelectorAll('.form-body input,.form-body textarea').forEach(el => { if (!el.closest('#items')) el.addEventListener('input', render); });
 addItem(); loadLogo();
