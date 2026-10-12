@@ -102,6 +102,14 @@ table.t{border-collapse:collapse;table-layout:fixed;width:100%;margin:0;font-siz
 .reqhead>div>span{display:block;margin-top:3px;font-weight:500}.reqhead>span{white-space:nowrap;background:var(--in);border:1px solid var(--bd);padding:3px 10px;border-radius:99px}
 .reqcustom{flex-wrap:wrap}.reqcustom input{flex:1 1 180px;min-width:0}.reqcustom button{flex:none;white-space:nowrap}
 .bld .reqbox{margin-top:18px}.bld .reqgrid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+
+/* PEB / Product slider (sidebar) */
+.modesw{position:relative;display:grid;grid-template-columns:1fr 1fr;margin:2px 12px 18px;padding:4px;border-radius:999px;background:#ffffff12;border:1px solid #ffffff1c}
+.modesw .thumb{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:999px;background:linear-gradient(135deg,#e0b455,#b8893a);box-shadow:0 4px 12px -4px #d9a84e;transition:transform .25s ease}
+.modesw[data-m="product"] .thumb{transform:translateX(100%)}
+.modesw button{position:relative;z-index:1;border:0;background:none;color:#a9b6c9;font:700 13px system-ui,-apple-system,'Segoe UI',Arial,sans-serif;letter-spacing:.3px;padding:8px 0;cursor:pointer;border-radius:999px;transition:color .2s}
+.modesw button.on{color:#0f1c2e}
+.modesw button:focus-visible{outline:2px solid #d9a84e;outline-offset:2px}
 </style></head>
 <body><div id="root"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
@@ -440,7 +448,7 @@ function App(){
    h('div',{className:'tot'},h('small',null,'Total'),h('b',null,'\u20B9'+inr(total))),
    h('button',{className:'btn',onClick:create},'Create Quotation'),
    doc&&[h('button',{key:'p',className:'btn g2 hide',disabled:busy,onClick:()=>download('pdf')},busy?'Please wait\u2026':'PDF'),h('button',{key:'w',className:'btn hide',style:{background:'linear-gradient(180deg,#3b6fd0,#2a56a8)'},disabled:busy,onClick:()=>download('word')},busy?'\u2026':'Word')]),
-  h('nav',{className:'sb'+(open?' open':'')},h('h4',null,'Quotation sections'),
+  h('nav',{className:'sb'+(open?' open':'')},h('div',{className:'modesw',id:'modesw','data-m':'peb',role:'group','aria-label':'Quotation type'},h('i',{className:'thumb'}),h('button',{type:'button','data-m':'peb',className:'on'},'PEB'),h('button',{type:'button','data-m':'product'},'Product')),h('h4',null,'Quotation sections'),
    NAV.map(([id,l])=>h('a',{key:id,className:act===id?'on':'',tabIndex:0,onClick:()=>go(id),onKeyDown:e=>{if(e.key==='Enter')go(id)}},h('i'),l)),
    h('div',{className:'sbf'},'Senela International')),
   h('div',{className:'scrim'+(open?' open':''),onClick:()=>setOpen(false)}),
@@ -474,4 +482,13 @@ function App(){
    doc&&h('div',{id:'pv'},h('div',{className:'pvh'},h('h3',null,'Preview'),h('div',{className:'btns'},h('button',{className:'btn g2',disabled:busy,onClick:()=>download('pdf')},busy?'Please wait\u2026':'Download PDF'),h('button',{className:'btn',style:{background:'linear-gradient(180deg,#3b6fd0,#2a56a8)'},disabled:busy,onClick:()=>download('word')},busy?'Please wait\u2026':'Download Word'))),h('div',{className:'pv'},h(Doc,{d:doc,logo,zoom})))))));
 }
 ReactDOM.createRoot(document.getElementById('root')).render(h(App));
-</script></body></html>
+</script><script>
+/* PEB / Product slider: slide the thumb, then open the other page */
+document.addEventListener('click',function(e){
+  var b=e.target.closest&&e.target.closest('#modesw button'); if(!b)return;
+  var sw=document.getElementById('modesw'),m=b.dataset.m; if(m===sw.dataset.m)return;
+  sw.dataset.m=m; sw.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)});
+  setTimeout(function(){location.href=(m==='peb'?'index.html':'product.html')},220);
+});
+</script>
+</body></html>
